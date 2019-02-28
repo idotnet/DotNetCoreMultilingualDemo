@@ -1,0 +1,58 @@
+﻿@using WebApplication1.Resources
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="form-group">
+    <label for="name">选择列表</label>
+    <select id="language" class="form-control">
+        <option value="en-US">@ResourceFile.Language_en</option>
+        <option value="zh-CN">@ResourceFile.Language_zh</option>
+    </select>
+</div>
+
+<div class="text-center">
+
+    <h1>@ViewBag.msg</h1>
+    <h1>@ResourceFile.Message</h1>
+
+</div>
+@section Scripts{
+    <script type="text/javascript">
+    $(function() {
+        $("#language").on('change', function () {
+            if ($(this).val()) {
+                var selectVal = $(this).find('option:selected').val();
+                console.log("selectVal" + selectVal);
+
+                var culture = getCookie(".AspNetCore.Culture");
+                console.log("culture:" + culture);
+
+                if (selectVal != culture) {
+                    setCookie(".AspNetCore.Culture", selectVal);
+                    window.location.reload();
+                }
+            }
+        });
+
+        //读取Cookie
+        function getCookie(name) {
+            var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)"); //正则匹配
+            if (arr = document.cookie.match(reg)) {
+                return unescape(arr[2]);
+            }
+            else {
+                return null;
+            }
+        }
+
+        //设置自定义过期时间cookie
+        function setCookie(name, value) {
+            var days = 100;
+            var exp = new Date();
+            exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1000);
+            document.cookie = name + "=" + escape(value) + ";";
+        }
+    });
+    </script>
+} 
